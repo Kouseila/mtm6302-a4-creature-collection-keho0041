@@ -1,3 +1,4 @@
+
 // PROVIDED: use this collection to generate the entries.
 const $creatures = [
   {
@@ -36,12 +37,141 @@ const $creatures = [
     "image": "assets/mushroom-sprite.svg",
     "alt": "A small cream sprite wearing a red spotted mushroom cap."
   }
-]
+];
 
-// YOUR WORK: build these features using the supplied HTML, CSS, and data.
-// 1. Select the collection and preference controls.
-// 2. Use a loop to generate the creature entries. See START-HERE.md for markup.
-// 3. Listen for changes to each preference control and update the appearance.
-// 4. Save both selected preferences to Local Storage.
-// 5. Check for saved data on load and restore the controls and appearance.
-// Add short pseudocode comments before writing each feature.
+// A4 CREATURE COLLECTION
+// Student JavaScript
+
+
+// Select the collection and preference controls
+const $collection = document.querySelector('#collection');
+const $theme = document.querySelector('#theme');
+const $layout = document.querySelector('#layout');
+const $status = document.querySelector('#status');
+
+// Assignment-specific Local Storage key
+const storageKey = 'mtm6302-a4-creature-preferences';
+
+
+// 1. GENERATE THE CREATURE COLLECTION
+
+
+// Pseudocode: Loop through the creatures and create an entry.
+function generateCreatures() {
+  $collection.innerHTML = '';
+
+  for (const creature of $creatures) {
+    const $entry = document.createElement('li');
+    $entry.classList.add('creature');
+
+    const $image = document.createElement('img');
+    $image.src = creature.image;
+    $image.alt = creature.alt;
+
+    const $info = document.createElement('div');
+    $info.classList.add('creature-info');
+
+    const $name = document.createElement('h3');
+    $name.textContent = creature.name;
+
+    const $description = document.createElement('p');
+    $description.classList.add('creature-description');
+    $description.textContent = creature.description;
+
+    $info.appendChild($name);
+    $info.appendChild($description);
+
+    $entry.appendChild($image);
+    $entry.appendChild($info);
+
+    $collection.appendChild($entry);
+  }
+}
+
+
+// 2. APPLY THE HABITAT THEME
+
+
+// Pseudocode: Update the body theme to match the selection.
+function applyTheme(theme) {
+  document.body.dataset.theme = theme;
+}
+
+
+// 3. APPLY THE COLLECTION LAYOUT
+
+
+// Pseudocode: Update the collection layout.
+function applyLayout(layout) {
+  $collection.dataset.layout = layout;
+}
+
+
+// 4. SAVE BOTH PREFERENCES
+
+
+// Pseudocode: Store the selected theme and layout as JSON.
+function savePreferences() {
+  const preferences = {
+    theme: $theme.value,
+    layout: $layout.value
+  };
+
+  localStorage.setItem(
+    storageKey,
+    JSON.stringify(preferences)
+  );
+
+  $status.textContent = 'Your preferences have been saved!';
+}
+
+
+// 5. RESTORE SAVED PREFERENCES
+
+
+// Pseudocode: Check storage and restore both choices.
+function loadPreferences() {
+  const savedData = localStorage.getItem(storageKey);
+
+  if (savedData !== null) {
+    const preferences = JSON.parse(savedData);
+
+    $theme.value = preferences.theme;
+    $layout.value = preferences.layout;
+
+    applyTheme(preferences.theme);
+    applyLayout(preferences.layout);
+
+    $status.textContent =
+      'Welcome back! Your preferences have been restored.';
+  } else {
+    
+    $status.textContent =
+      'No saved preferences yet. Choose your habitat and layout!';
+  }
+}
+
+
+// 6. LISTEN FOR CONTROL CHANGES
+
+
+// Pseudocode: Change the theme and save both preferences.
+$theme.addEventListener('change', function () {
+  applyTheme($theme.value);
+  savePreferences();
+});
+
+// Pseudocode: Change the layout and save both preferences.
+$layout.addEventListener('change', function () {
+  applyLayout($layout.value);
+  savePreferences();
+});
+
+
+// 7. INITIALIZE THE COLLECTION
+
+// Generate the six creatures once.
+generateCreatures();
+
+// Restore saved preferences without saving defaults.
+loadPreferences();
